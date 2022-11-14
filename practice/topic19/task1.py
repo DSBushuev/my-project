@@ -16,8 +16,8 @@ COLOR = R,G,B
 BACKGROUND = (250,250,200)
 
 
-whith_circle = 50
-height_circle = 50
+whith_ball = 50
+height_ball = 50
 
 x = W // 2
 y = H // 2
@@ -29,13 +29,22 @@ while 1:
         if event.type == pygame.QUIT:
             exit()
 
-    if x == 0 or x == 500 - whith_circle:
+    keys = pygame.key.get_pressed()
+
+    if x < 1 or x > 499 - whith_ball:
         speed *= -1
 
-    x += speed
+    if keys[pygame.K_LEFT]:
+        speed -= 1
+
+    elif keys[pygame.K_RIGHT]:
+        speed += 1
+
+
+    x += speed // 2
 
     sc.fill(BACKGROUND)
-    ball = pygame.draw.ellipse(sc, COLOR,(x, y, whith_circle, height_circle) )
+    ball = pygame.draw.ellipse(sc, COLOR,(x, y, whith_ball, height_ball) )
     pygame.display.update()
 
     clock.tick(FPS)
