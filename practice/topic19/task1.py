@@ -1,61 +1,42 @@
 import pygame
+from random import randint
+
+from practice.topic19.class_ball import Ball
 
 pygame.init()
 
-W = 1000
-H = 500
-
-sc = pygame.display.set_mode((W, H), pygame.RESIZABLE)
-pygame.display.set_caption("task1-5")
-
+sc = pygame.display.set_mode((1000, 1000))
 clock = pygame.time.Clock()
-FPS = 30
-
-R, G, B = 50, 250, 50
-BACKGROUND = (250,250,200)
-
-
-whith_ball = 60
-height_ball = 60
-
-x = W // 2
-y = H // 2
-speed = 5
-friction_force = .9
+FPS = 48
+x = y = 200
+ball1 = Ball(sc, (y, x), (250, 50, 50), 20, (0, 0))
+flag = False
 
 
 while 1:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             exit()
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            temp = Ball(sc, event.pos, (0, 0, 0), 10, (randint(-30, 30), randint(-30, 30)))
+            flag = True
+        elif event.type == pygame.MOUSEWHEEL:
+            temp = Ball(sc, (sc.get_size()[0]//2, sc.get_size()[1]//2), 'RANDOM', 10, (randint(-30, 30), randint(-30, 30)))
 
-    keys = pygame.key.get_pressed()
+    sc.fill((100, 100, 220))
 
-    if x < 1:
-        speed += 1
-        speed *= -1
-        x = 1
-    elif x > W - whith_ball:
-        speed -= 1
-        speed *= -1
-        x = W - whith_ball - 1
+    for n, ball in enumerate(ball1.EXAMPLES):
+        if flag:
+            ball.speed_up(100)
+        ball.color_of_speed()
+        ball.speed_limit(30)
+        for i in range(n + 1, len(ball1.EXAMPLES)):
+            ball.clash(ball1.EXAMPLES[i])
+        ball._move()
+        ball._show()
+        ball.speed_slow(.1)
+    flag = False
 
-
-
-    if keys[pygame.K_LEFT]:
-        speed -= 1
-
-    elif keys[pygame.K_RIGHT]:
-        speed += 1
-
-    speed -= 0.0098 * speed
-
-    x += int(speed)
-    if abs(speed) > 58:
-        speed = 58
-
-    sc.fill(BACKGROUND)
-    ball = pygame.draw.ellipse(sc,(int(R + abs(speed) * 3.5), int(G - abs(speed) * 3.5), B),(x, y, whith_ball, height_ball) )
     pygame.display.update()
 
     clock.tick(FPS)
