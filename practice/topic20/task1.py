@@ -1,7 +1,7 @@
 import pygame
 from random import randint
 
-from practice.topic19.class_ball import Ball
+from class_ball import Ball
 
 pygame.init()
 
