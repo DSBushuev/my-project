@@ -54,3 +54,5 @@ class Ball:
     @staticmethod
     def get_all_ball():
         return EXAMPLES
+
+#DONE
