@@ -40,7 +40,16 @@ class Ball:
         pygame.draw.circle(self.sc, self.color, self.pos.intpair(), self.radius)
 
     def clash(self, other):
-        pass
+        return abs(self.pos.x - other.pos.x) <= self.radius + other.radius and\
+               abs(self.pos.y - other.pos.y) <= self.radius + other.radius
+
+    # task6
+    def push_off(self, other):
+        m1 = self.radius ** 2
+        m2 = other.radius ** 2
+        x = ((self.speed * (m1 - m2)) + (2 * m2 * other.speed)) / (m1 + m2)
+        y = ((other.speed * (m2 -m1)) + (2 * m1 * self.speed)) / (m1 + m2)
+        self.speed, other.speed = x, y
 
     @staticmethod
     def get_all_ball():

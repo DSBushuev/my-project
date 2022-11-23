@@ -49,19 +49,23 @@ while 1:
 
     sc.fill(WHITE)
 
-    for ball in Ball.get_all_ball():
+    for n, ball in enumerate(Ball.get_all_ball()):
         if (CURSOR_POS[0] - ball.radius < ball.pos.x < CURSOR_POS[0] + ball.radius) and \
                 (CURSOR_POS[1] - ball.radius < ball.pos.y < CURSOR_POS[1] + ball.radius):
             flag_for_new_ball = False
             control_ball = ball
             ball.color = RANDOM_COLOR
             ball.speed = Vector(0, 0)
+        for i in range(n + 1, len(Ball.get_all_ball())):
+            if ball.clash(Ball.get_all_ball()[i]):
+                ball.push_off(Ball.get_all_ball()[i])
         ball.update()
         ball.render()
+        ball.speed *= 0.99
 
 
     def add_ball(pos):
-        Ball(sc, pos, (250,250,250), 30, RANDOM_SPEED)
+        Ball(sc, pos, (250,250,250), 20, RANDOM_SPEED)
 
 
     if flag_for_new_ball:
