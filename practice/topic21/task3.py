@@ -74,3 +74,5 @@ while 1:
     pygame.display.update()
 
     clock.tick(FPS)
+
+#DONE!

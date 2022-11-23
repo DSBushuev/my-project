@@ -54,3 +54,5 @@ def center_mass(list_point: list):
     for v in vector_list:
         res += v
     return res / len(list_point)
+
+#DONE!
