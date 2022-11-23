@@ -3,6 +3,7 @@ from random import randint
 import pygame
 
 from topic21.Class.ball import Ball
+from topic21.Class.vector import Vector
 
 pygame.init()
 
@@ -14,6 +15,7 @@ RED = (255, 20, 10)
 BlACK = (0, 0, 0)
 START_SPEED = (20, 20)
 FPS = 30
+control_ball = None
 
 while 1:
     RANDOM_COLOR = (randint(0, 230), randint(0, 230), randint(0, 230))
@@ -28,13 +30,32 @@ while 1:
             CURSOR_POS = event.pos
             flag_for_new_ball = True
 
+    keys = pygame.key.get_pressed()
+    if control_ball:
+        if keys[pygame.K_UP]:
+            control_ball.speed.y -= 1
+        elif keys[pygame.K_DOWN]:
+            control_ball.speed.y += 1
+        if keys[pygame.K_RIGHT]:
+            control_ball.speed.x += 1
+        elif keys[pygame.K_LEFT]:
+            control_ball.speed.x -= 1
+        elif keys[pygame.K_SPACE]:
+            control_ball.speed = Vector(0, 0)
+        if keys[pygame.K_b]:
+            control_ball.radius += 1
+        elif keys[pygame.K_s]:
+            control_ball.radius -= 1
+
     sc.fill(WHITE)
 
     for ball in Ball.get_all_ball():
-        if (CURSOR_POS[0] - 2 * ball.radius < ball.pos.x < CURSOR_POS[0] + 2 * ball.radius) and \
-                (ball.pos.y > CURSOR_POS[1] - 2 * ball.radius < CURSOR_POS[1] + 2 * ball.radius):
+        if (CURSOR_POS[0] - ball.radius < ball.pos.x < CURSOR_POS[0] + ball.radius) and \
+                (ball.pos.y > CURSOR_POS[1] - ball.radius < CURSOR_POS[1] + ball.radius):
             flag_for_new_ball = False
+            control_ball = ball
             ball.color = RANDOM_COLOR
+            ball.speed = Vector(0, 0)
         ball.update()
         ball.render()
 

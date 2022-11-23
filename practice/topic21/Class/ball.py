@@ -15,14 +15,17 @@ class Ball:
         self.radius = radius
         self.speed = Vector(*speed)
 
+    def __bool__(self):
+        return True
+
     def update(self):
         new_pos = self.pos + self.speed
         new_speed = self.speed
-        if new_pos.x <= 0:
+        if new_pos.x <= self.radius:
             new_pos = Vector(abs(self.pos.x + self.speed.x), self.pos.y + self.speed.y)
             new_speed = Vector(-self.speed.x, self.speed.y)
-        elif new_pos.x >= self.sc.get_size()[0]:
-            new_pos = Vector(2 * self.sc.get_size()[0] - new_pos.x, self.pos.y + self.speed.y)
+        elif new_pos.x + self.radius >= self.sc.get_size()[0]:
+            new_pos = Vector(2 * self.sc.get_size()[0] - new_pos.x - self.radius, self.pos.y + self.speed.y)
             new_speed = Vector(-self.speed.x, self.speed.y)
         if new_pos.y <= 0:
             new_pos = Vector(new_pos.x, abs(new_pos.y))
