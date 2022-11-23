@@ -51,7 +51,7 @@ while 1:
 
     for ball in Ball.get_all_ball():
         if (CURSOR_POS[0] - ball.radius < ball.pos.x < CURSOR_POS[0] + ball.radius) and \
-                (ball.pos.y > CURSOR_POS[1] - ball.radius < CURSOR_POS[1] + ball.radius):
+                (CURSOR_POS[1] - ball.radius < ball.pos.y < CURSOR_POS[1] + ball.radius):
             flag_for_new_ball = False
             control_ball = ball
             ball.color = RANDOM_COLOR

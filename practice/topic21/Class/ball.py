@@ -24,10 +24,10 @@ class Ball:
         if new_pos.x <= self.radius:
             new_pos = Vector(abs(self.pos.x + self.speed.x), self.pos.y + self.speed.y)
             new_speed = Vector(-self.speed.x, self.speed.y)
-        elif new_pos.x + self.radius >= self.sc.get_size()[0]:
-            new_pos = Vector(2 * self.sc.get_size()[0] - new_pos.x - self.radius, self.pos.y + self.speed.y)
+        elif new_pos.x >= self.sc.get_size()[0]:
+            new_pos = Vector(2 * self.sc.get_size()[0] - new_pos.x, self.pos.y + self.speed.y)
             new_speed = Vector(-self.speed.x, self.speed.y)
-        if new_pos.y <= 0:
+        if new_pos.y <= self.radius:
             new_pos = Vector(new_pos.x, abs(new_pos.y))
             new_speed = Vector(new_speed.x, - new_speed.y)
         elif new_pos.y >= self.sc.get_size()[1]:
@@ -38,6 +38,9 @@ class Ball:
 
     def render(self):
         pygame.draw.circle(self.sc, self.color, self.pos.intpair(), self.radius)
+
+    def clash(self, other):
+        pass
 
     @staticmethod
     def get_all_ball():
