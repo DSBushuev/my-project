@@ -1,60 +1,55 @@
 from collections import deque
 
+''' Правитель графландии решил провести реформу административных округов в своем государстве.
+А именно ему хочется, чтобы расстояние от города до главного города его округа не превышало
+расстояния от данного города до главных городов других округов.
+Главные города правитель уже выбрал, вам остается всего лишь разбить остальные города по округам.
+Если есть несколько вариантов расстановки - подойдет любой. Если не справитесь, вам отрубят голову.
+'''
 
-n, m, *capitals = map(int, input().split())
-roads = {}
-def roads_add(s1,s2,d):
+n, m, *capitals = map(int, input().split()) # кол-во городов, кол-во дорог, областные центры
+roads = {}     # словарь дорог {из города А: {в город Б: расстояние между А и Б}
+
+# добавление дорог в словарь дорог
+def roads_add(s1, s2, d):
     global roads
     if s1 not in roads:
-        roads[s1] = {s2: distance}
+        roads[s1] = {s2: d}
     else:
-        roads[s1][s2] = distance
+        roads[s1][s2] = d
 
 
+# заполняем словарь дорог
 for i in range(m):
     s1, s2, distance = map(int, input().split())
-    roads_add(s1,s2,distance)
-    roads_add(s2,s1,distance)
+    roads_add(s1, s2, distance)
+    roads_add(s2, s1, distance)
 
-def search_min_distance(G, start, finish):
-    min_distance = {start: 0}
-    q = deque()
-    q.append(start)
+
+cities = {}   # словарь городов {город А: (столица С, расстояние до столицы)}
+
+# нахождение минимальной дистанции от столицы до всех городов.
+def search_min_distance(G, start):
+    global cities                   # подключаем словарь
+    min_distance = {start: 0}       # минимальная дистанция от начальной вершины до самой себя 0
+    q = deque()                     #
+    q.append(start)                 # положили в очередь стартовую вершину.
     while q:
-        vertex = q.popleft()
+        vertex = q.popleft()        # забираем из очереди первый элемент и работаем с ним
         if vertex not in G:
             continue
-        for v in G[vertex]:
+        for v in G[vertex]:         # Сравниваем значение от текущей вершины с значением которое уже было,
             if v not in min_distance or min_distance[v] > min_distance[vertex] + G[vertex][v]:
-                min_distance[v] = min_distance[vertex] + G[vertex][v]
+                min_distance[v] = min_distance[vertex] + G[vertex][v] # если оно меньше меняем и добавляем в очередь
                 q.append(v)
-    return min_distance[finish] if finish in min_distance else float("inf")
+    for city in min_distance:       # Заполняем словарь городов расстояниями до обл.центра
+        if city not in cities:      # добавляем города если их нет, если расттояние меньше того, что было, обновляем
+            cities[city] = (start, min_distance[city])
+        else:
+            if cities[city][1] > min_distance[city]:
+                cities[city] = (start, min_distance[city])
 
-res = []
-for city in range(n):
-    if city in capitals:
-        res.append(city)
-        continue
-    if city not in roads:
-        res.append(-1)
-        continue
-    my_distance = float("inf")
-    my_capital = -1
-    for capital in capitals:
-        min_distance = search_min_distance(roads, capital, city)
-        if min_distance < my_distance:
-            my_distance = min_distance
-            my_capital = capital
-    res.append(my_capital)
-print(*res, sep="\n")
-
-
-
-
-
-
-
-
-
-
-
+for capital in capitals: # запускаем алгоритм поиска наименьших путей для всех обл.центров выявляем самый ближний записываем в словарь городов
+    search_min_distance(roads, capital)
+#распечатываем по очереди городов их столицу
+print(*[cities[city][0] if city in cities else -1 for city in range(n)], sep="\n")
